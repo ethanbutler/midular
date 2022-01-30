@@ -17,7 +17,7 @@ export const NOTE_WHEEL_SHARPS = [
   "A",
   "A#",
   "B",
-];
+] as const;
 export const NOTE_WHEEL_FLATS = [
   "C",
   "Db",
@@ -31,5 +31,5 @@ export const NOTE_WHEEL_FLATS = [
   "A",
   "Bb",
   "B",
-];
+] as const;
 export const MINUTE_IN_S = 60;

@@ -7,8 +7,8 @@ import {
   useCellSelectionState,
 } from "providers/CellSelection/CellSelection";
 import { ChannelsProvider } from "providers/Channels/Channels";
+import { KeySelection } from "providers/KeySelection/KeySelection";
 import { Theme } from "providers/Theme/Theme";
-
 import { GridItem } from "components/GridItem/GridItem";
 import { TransitionInOutArray } from "components/TransitionInOut/TransitionInOut";
 import { ChannelBar } from "components/ChannelBar/ChannelBar";
@@ -53,6 +53,7 @@ function DeviceGrid() {
     >
       <CellGrid />
 
+
       <CurrentDevice>{deviceType}</CurrentDevice>
     </CellSelectionProvider>
   );
@@ -63,13 +64,14 @@ function App() {
     <Theme>
       <ChannelsProvider>
         <DevicesProvider>
-          <AppLayout>
-            <ChannelBar />
-
-            <GridWrapper>
-              <DeviceGrid />
-            </GridWrapper>
-          </AppLayout>
+          <KeySelection>
+            <AppLayout>
+              <ChannelBar />
+              <GridWrapper>
+                <DeviceGrid />
+              </GridWrapper>
+            </AppLayout>
+          </KeySelection>
         </DevicesProvider>
       </ChannelsProvider>
     </Theme>
@@ -89,16 +91,17 @@ const AppLayout = styled.div`
 const GridWrapper = styled.div`
   flex: 1;
   padding: 30px;
-  background: linear-gradient(0, #222, #2a2a2a);
+  background: #222;
 `;
 
 const CurrentDevice = styled.div`
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  top: 0;
+  padding: 0 30px;
   line-height: 30px;
-  text-align: center;
+  text-align: right;
   font-weight: 900;
   text-transform: uppercase;
 `;

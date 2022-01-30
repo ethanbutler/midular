@@ -1,3 +1,4 @@
+import { Note } from "providers/KeySelection/KeySelection";
 import {
   NOTE_PATTERN,
   NOTE_WHEEL_FLATS,
@@ -17,7 +18,7 @@ export function getPitchFromNote(value: string) {
   const [, note, octave] = NOTE_PATTERN.exec(value)!;
   const lookupList = note.includes("b") ? NOTE_WHEEL_FLATS : NOTE_WHEEL_SHARPS;
   return (
-    lookupList.indexOf(note) +
+    lookupList.indexOf(note as any) +
     (Number(octave) + OCTAVE_OFFSET) * NOTES_IN_OCTAVE
   );
 }
@@ -27,7 +28,7 @@ export function getPitchFromNote(value: string) {
  *
  * TODO: This should return flats based on a global key.
  */
-export function getNoteFromPitch(value: number) {
+export function getNoteFromPitch(value: number): Note {
   const octave = Math.floor(value / NOTES_IN_OCTAVE) - OCTAVE_OFFSET;
   const remainder = value % NOTES_IN_OCTAVE;
 
