@@ -3,7 +3,8 @@ import { useMap } from "@react-hookz/web";
 import { nanoid } from "nanoid";
 import { checkForOverlap, convertDimensionsToBound } from "helpers/coords";
 import { useChannels } from "providers/Channels/Channels";
-import { DeviceKey, DEVICE_KEYCODES } from "devices";
+import { DEVICE_KEYCODES } from "devices";
+import { useGlobalKeypress } from "hooks/useGlobalKeypress";
 
 const DevicesContext = React.createContext<ReturnType<typeof useDevicesProvider>>(
   null as any
@@ -21,25 +22,10 @@ interface DevicesProviderProps {
 export const useDevicesProvider = () => {
   const {activeChannel} = useChannels()
   const devicesMap = useMap<DeviceGridData['uuid'], DeviceGridMapData>()
-
-  // TODO: Move to a global hook.
-  const [deviceType, setDeviceType] = React.useState<DeviceKey>('Slider')
-
+  const deviceType = useGlobalKeypress(DEVICE_KEYCODES, 'Slider')
   const devicesArray: DeviceGridData[] = Array.from(devicesMap, ([uuid, value]) => ({ uuid, ...value }));
 
-  // TODO: Move to hooks
-  React.useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      const key = e.key.toUpperCase()
-      const deviceKey = DEVICE_KEYCODES[key]
-      if(deviceKey) setDeviceType(deviceKey)
-    }
-
-    document.addEventListener('keypress', handleKeyPress)
-    return () => document.removeEventListener('keypress', handleKeyPress)
-  }, [])
-
-  /** Determines if a new  */
+  /** Determines if a new device is being added. */
   // TODO: Optimize this algorithm to check for most likely sets first.
   const detectCollision = (dimensions: Dimensions) => {
     const newBounds = convertDimensionsToBound(dimensions)
