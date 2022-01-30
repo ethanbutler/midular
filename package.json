@@ -1,0 +1,23 @@
+{
+  "name": "midular",
+  "engines": {
+    "node": "16"
+  },
+  "private": true,
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "lerna": "^4.0.0"
+  },
+  "workspaces": [
+    "packages/client",
+    "packages/common",
+    "packages/server"
+  ],
+  "dependencies": {
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1"
+  },
+  "scripts": {
+    "start": "concurrently \"yarn workspace client start\" \"yarn workspace server start\""
+  }
+}
