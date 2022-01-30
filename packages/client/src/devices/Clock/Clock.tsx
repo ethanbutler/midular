@@ -1,15 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { TransitionInOut } from "components/TransitionInOut/TransitionInOut";
 import { useLongTouch } from "hooks/useLongTouch";
-import { MINUTE_IN_S } from "../../constants";
-import { useTrigger } from "hooks/useTrigger";
+import { Subdivision, useClockTrigger } from "hooks/useTrigger";
+import { FiPlay, FiPause, FiSquare } from "react-icons/fi";
+import mergeRefs from "react-merge-refs";
 
-type ClockStatus = "playing" | "stopped";
-type Subdivision = 2 | 4 | 8 | 16 | 32;
-type Interval = ReturnType<typeof setInterval> | null;
-
-const subdivisions = [2, 4, 8, 16, 32] as Subdivision[];
+const subdivisions = [1, 2, 4, 8, 16, 32] as Subdivision[];
 
 /**
  * Renders a clock, which emits trigger events based on
@@ -21,60 +17,64 @@ const subdivisions = [2, 4, 8, 16, 32] as Subdivision[];
  * TODO: Move clock events to worker threads via useClockTrigger.
  */
 export function Clock({ channel }: DeviceParameters) {
-  const [longTouchRef, isLongPressed] = useLongTouch();
-  const ref = React.useRef<HTMLButtonElement>(null);
-  const [status, setStatus] = React.useState<ClockStatus>("stopped");
-  const [bpm] = React.useState(100);
-  const [currentSubdivision, setSubdivision] = React.useState<Subdivision>(8);
-  const interval = React.useRef<Interval>(null);
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [longPressRef, isLongPressed] = useLongTouch();
+  const [bpm, setBpm] = React.useState(100);
+  const [subdivision, setSubdivision] = React.useState<Subdivision>(8);
 
-  const { on, off } = useTrigger(channel);
-
-  React.useEffect(() => {
-    if (status === "playing") {
-      const tempo = (((bpm / MINUTE_IN_S) * 4) / currentSubdivision) * 1000;
-      interval.current = setInterval(() => {
-        ref.current!.style.background = "var(--gridItemColor)";
-        on();
-        setTimeout(() => {
-          ref.current!.style.background = "";
-          off();
-        }, 100);
-      }, tempo);
-    } else {
-      clearInterval(interval.current!);
-    }
-
-    return () => clearInterval(interval.current!);
-  }, [status, bpm, currentSubdivision, on, off]);
+  const [status, { play, pause, stop }] = useClockTrigger(channel, {
+    bpm,
+    subdivision,
+    duration: 50,
+    onActive: () => {
+      ref.current!.style.background = "var(--gridItemLowAlpha)";
+    },
+    onInactive: () => {
+      ref.current!.style.background = "";
+    },
+  });
 
   return (
-    <ClockWrapper ref={longTouchRef}>
-      <ClockButton
-        ref={ref}
-        status={status}
-        onClick={() =>
-          setStatus((s) => (s === "playing" ? "stopped" : "playing"))
-        }
-      >
-        {bpm}
-      </ClockButton>
-
-      <TransitionInOut>
-        {isLongPressed && (
-          <SubdivisionControls>
-            {subdivisions.map((subdivision) => (
-              <SubdivisionButton
-                key={subdivision}
-                isActive={currentSubdivision === subdivision}
-                onClick={setSubdivision.bind(null, subdivision)}
-              >
-                {subdivision}
-              </SubdivisionButton>
-            ))}
-          </SubdivisionControls>
+    <ClockWrapper ref={mergeRefs([ref, longPressRef])}>
+      <ButtonWrapper>
+        {status === "playing" && (
+          <ClockButton onClick={pause}>
+            <FiPause />
+          </ClockButton>
         )}
-      </TransitionInOut>
+        {status !== "playing" && (
+          <ClockButton onClick={play}>
+            <FiPlay />
+          </ClockButton>
+        )}
+        {status !== "stopped" && (
+          <ClockButton onClick={stop}>
+            <FiSquare />
+          </ClockButton>
+        )}
+      </ButtonWrapper>
+
+      <InputWrapper>
+        <BpmInput
+          value={bpm}
+          onChange={(e) => setBpm(Number(e.target.value))}
+        />
+        <span>BPM</span>
+      </InputWrapper>
+
+      {isLongPressed && (
+        <SubdivisionControls>
+          {subdivisions.map((s) => (
+            <SubdivisionButton
+              key={s}
+              isActive={s === subdivision}
+              onClick={setSubdivision.bind(null, s)}
+            >
+              {s}
+            </SubdivisionButton>
+          ))}
+        </SubdivisionControls>
+      )}
     </ClockWrapper>
   );
 }
@@ -88,22 +88,44 @@ const ClockWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  color: #fff;
+  transition: background-color 0.1s ease;
+
+  button,
+  input {
+    color: inherit;
+  }
 `;
 
-const ClockButton = styled.button<{ status: ClockStatus }>`
-  display: block;
-  background: var(--gridItemMedAlpha);
-  color: #fff;
-  aspect-ratio: 1;
-  border-radius: 100%;
-  max-height: 100%;
-  max-width: 100%;
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 4px;
   width: 100%;
-  height: 100%;
+  flex: 1;
+`;
+
+const ClockButton = styled.button`
+  background: none;
   border: none;
+  flex: 1;
+  font-size: 20px;
+  padding: 1vmin;
+`;
+
+const InputWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 4px;
   font-weight: 900;
-  font-family: inherit;
-  transition: background-color 0.05s ease;
+`;
+const BpmInput = styled.input`
+  background: none;
+  border: none;
+  display: inline;
+  font-size: inherit;
+  width: 3ch;
+  outline: none;
+  text-align: right;
 `;
 
 const SubdivisionControls = styled.div`

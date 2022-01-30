@@ -112,4 +112,5 @@ const DeleteButton = styled.button<{ visible: boolean }>`
   background: #333;
   color: var(--gridItemColor);
   padding: 0;
+  font-size: 12px;
 `;

@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { DevicesProvider } from "providers/Devices/Devices";
 import { useArrayOfSize } from "hooks/useArrayOfSize";
 import { useCount } from "hooks/useCount";
-import { useTriggerSubscription } from "hooks/useTrigger";
+import { useClockSubscription, useTriggerSubscription } from "hooks/useTrigger";
 import { SequencerStep } from "./SequencerStep";
 
 /** Encapsulates state for sequencers. */
 export function useSequencer(channel: ChannelData["number"]) {
   const [beatCount] = React.useState(8);
-  const [currentBeat, { increment }] = useCount(beatCount);
+  const [currentBeat, { increment, reset }] = useCount(beatCount);
   const beats = useArrayOfSize(beatCount);
 
   // Sets up subcription between the sequencer and the
@@ -17,6 +17,10 @@ export function useSequencer(channel: ChannelData["number"]) {
   useTriggerSubscription(channel, {
     onTrigger: increment,
   });
+
+  useClockSubscription(channel, {
+    onStop: reset,
+  })
 
   return { beatCount, beats, currentBeat };
 }

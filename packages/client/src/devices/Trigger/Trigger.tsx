@@ -19,16 +19,17 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px;
+  padding: 1vmin;
 `;
 
 const TriggerButton = styled.button<{ isActive: boolean }>`
   display: block;
   width: 100%;
+  height: 100%;
   aspect-ratio: 1;
-  border-radius: 100%;
+  border-radius: 4px;
   border: none;
-  background: ${(props) =>
-    props.isActive ? "var(--gridItemMedAlpha)" : "var(--gridItemLowAlpha)"};
-  transition: background-color 0.1s ease;
+  background: ${props => props.isActive ? '#fff' : 'var(--gridItemColor)'};
+  box-shadow: ${props => props.isActive ? 'inset 0 0 15px rgba(0,0,0,.2)' : '0 0 15px rgba(0,0,0,.5)'};
+  transition: background-color 0.6s ease, box-shadow .1s ease;
 `;

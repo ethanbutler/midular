@@ -1,4 +1,5 @@
 import React from "react";
+import { MINUTE_IN_S } from "../constants";
 
 /**
  * Returns on and off callbacks for modeling a trigger.
@@ -29,6 +30,7 @@ export function useTrigger(channel: TriggerChannel) {
 
 interface UseSubscriptionTriggerConfig {
   onTrigger?: () => void;
+  onStop?: () => void;
 }
 
 /**
@@ -39,7 +41,7 @@ interface UseSubscriptionTriggerConfig {
  **/
 export function useTriggerSubscription(
   channel: TriggerChannel,
-  { onTrigger = () => {} }: UseSubscriptionTriggerConfig = {}
+  { onTrigger = () => {}, onStop = () => {} }: UseSubscriptionTriggerConfig = {}
 ) {
   const [isOn, setIsOn] = React.useState(false);
   const cb = React.useRef(onTrigger);
@@ -58,7 +60,7 @@ export function useTriggerSubscription(
 
     return () => {
       document.removeEventListener(`trigger_${channel}_on`, on);
-      document.removeEventListener(`trigger_${channel}_off`, off);
+      document.removeEventListener(`trigger_${channel}_stiop`, off);
     };
   }, [channel]);
 
@@ -91,4 +93,90 @@ export function useTouchTrigger(channel: TriggerChannel) {
     onMouseUp,
     onTouchEnd,
   };
+}
+
+// TODO: Move to its own module.
+export function useClockStatus(channel: TriggerChannel) {
+  const [status, setStatus] = React.useState<ClockStatus>("stopped");
+  const play = () => setStatus("playing");
+  const pause = () => setStatus("paused");
+  const stop = () => {
+    setStatus("stopped");
+    const evt = new CustomEvent(`trigger_${channel}_stop`);
+    document.dispatchEvent(evt);
+  };
+
+  return {
+    status,
+    play,
+    pause,
+    stop,
+  };
+}
+
+type ClockSubscriptionArgs = {
+  onStop(): void;
+};
+
+/** Subscribes to a clock's events. */
+export function useClockSubscription(
+  channel: TriggerChannel,
+  { onStop }: ClockSubscriptionArgs
+) {
+  React.useEffect(() => {
+    document.addEventListener(`trigger_${channel}_stop`, onStop);
+    return () => {
+      document.removeEventListener(`trigger_${channel}_stop`, onStop);
+    };
+  }, [onStop]);
+}
+
+export type ClockStatus = "playing" | "paused" | "stopped";
+export type Interval = ReturnType<typeof setInterval> | null;
+export type Subdivision = 1 | 2 | 4 | 8 | 16 | 32;
+type ClockTriggerArgs = {
+  /** Beats per minute for the clock. */
+  bpm: number;
+  /** How long each pulse should remain active. */
+  duration: number;
+  /** How many beats to subdivide each group into. */
+  subdivision: number;
+  /** Callback when a pulse is active. */
+  onActive?: () => void;
+  /** Callback when a pulse becomes inactive. */
+  onInactive?: () => void;
+  /** Callback when the clock is stopped. */
+  onStop?: () => void;
+};
+export function useClockTrigger(
+  channel: TriggerChannel,
+  { bpm, duration, subdivision, onActive, onInactive }: ClockTriggerArgs
+) {
+  const { status, ...clockCallbacks } = useClockStatus(channel);
+  const { on, off } = useTrigger(channel);
+  const interval = React.useRef<Interval>(null);
+
+  React.useEffect(() => {
+    if (status === "playing") {
+      const tempo = (((MINUTE_IN_S / bpm) * 4) / subdivision) * 1000;
+
+      const trigger = () => {
+        on();
+        if (onActive) onActive();
+        setTimeout(() => {
+          off();
+          if (onInactive) onInactive();
+        }, duration);
+      };
+
+      trigger();
+      interval.current = setInterval(trigger, tempo);
+    } else {
+      clearInterval(interval.current!);
+    }
+
+    return () => clearInterval(interval.current!);
+  }, [status, bpm, subdivision, on, off, onActive, onInactive]);
+
+  return [status, clockCallbacks] as const;
 }
