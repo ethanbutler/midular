@@ -17,7 +17,7 @@ import { Device } from "devices";
 // TODO: Clean all of this up.
 
 function CellGrid() {
-  const theme = useTheme()
+  const theme = useTheme();
   const gridSize = useGridSize();
   const { isColliding } = useCellSelectionState();
   const { devicesArray, removeDevice, updateDeviceParameters } = useDevices();
@@ -36,7 +36,7 @@ function CellGrid() {
               updateDeviceParameters(item.uuid, { channel })
             }
           >
-            <Device {...item}/>
+            <Device {...item} />
           </GridItem>
         )}
       />
@@ -90,17 +90,17 @@ const GridWrapper = styled.div`
   flex: 1;
   padding: 30px;
   background: linear-gradient(0, #222, #2a2a2a);
-`
+`;
 
 const CurrentDevice = styled.div`
-position: fixed;
-left: 0;
-right: 0;
-bottom: 0;
-line-height: 30px;
-text-align: center;
-font-weight: 900;
-text-transform: uppercase;
-`
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  line-height: 30px;
+  text-align: center;
+  font-weight: 900;
+  text-transform: uppercase;
+`;
 
 export default App;

@@ -17,9 +17,7 @@ export function ChannelBar(_props: ChannelBarProps) {
           key={channel.number}
           onClick={setActiveChannel.bind(null, channel.number)}
         >
-          <ChannelNumber
-            isActive={activeChannel === channel.number}
-          />
+          <ChannelNumber isActive={activeChannel === channel.number} />
         </ChannelControl>
       ))}
 
@@ -32,7 +30,7 @@ const ChannelBarWrapper = styled.div<{ isHovered: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
-  width: ${props => props.isHovered ? '30px' : '6px'};
+  width: ${(props) => (props.isHovered ? "30px" : "6px")};
   transition: width 0.1s ease;
   z-index: 10;
 `;
@@ -41,7 +39,7 @@ const HitBox = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
-  left:  0;
+  left: 0;
   width: 30px;
 `;
 

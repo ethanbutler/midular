@@ -7,7 +7,7 @@ import { useTriggerSubscription } from "hooks/useTrigger";
 import { SequencerStep } from "./SequencerStep";
 
 /** Encapsulates state for sequencers. */
-export function useSequencer(channel: ChannelData['number']) {
+export function useSequencer(channel: ChannelData["number"]) {
   const [beatCount] = React.useState(8);
   const [currentBeat, { increment }] = useCount(beatCount);
   const beats = useArrayOfSize(beatCount);
@@ -18,7 +18,7 @@ export function useSequencer(channel: ChannelData['number']) {
     onTrigger: increment,
   });
 
-  return { beatCount, beats, currentBeat }
+  return { beatCount, beats, currentBeat };
 }
 
 /**
@@ -37,7 +37,7 @@ export function useSequencer(channel: ChannelData['number']) {
  * TODO: Prevent long presses on children from triggering for the sequencer
  */
 export function Sequencer({ uuid, channel }: DeviceParameters) {
-  const { beatCount, beats, currentBeat } = useSequencer(channel)
+  const { beatCount, beats, currentBeat } = useSequencer(channel);
 
   return (
     <Wrapper beatCount={beatCount}>

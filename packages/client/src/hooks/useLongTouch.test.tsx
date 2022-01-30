@@ -13,7 +13,7 @@ test("should return the current state", async () => {
   const el = screen.getByText("no");
   act(() => {
     fireEvent.mouseDown(el);
-  })
+  });
   await screen.findByText("yes");
 });
 

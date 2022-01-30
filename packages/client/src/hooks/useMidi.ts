@@ -1,16 +1,16 @@
 import { useThrottledCallback } from "@react-hookz/web";
-import { CONTROL_CHANGE, NOTE_ON, NOTE_OFF } from 'common'
+import { CONTROL_CHANGE, NOTE_ON, NOTE_OFF } from "common";
 import { useEvent } from "./useEvent";
 
 export function useMidi(channel: number) {
-  const {emit} = useEvent()
+  const { emit } = useEvent();
 
   const emitControlChange = useThrottledCallback(
     (value: number) => {
       emit(CONTROL_CHANGE, {
         channel,
-        value: Math.floor(value * 127)
-      })
+        value: Math.floor(value * 127),
+      });
     },
     [channel],
     50
@@ -21,14 +21,14 @@ export function useMidi(channel: number) {
     emit(NOTE_ON, {
       channel,
       value,
-    })
+    });
     setTimeout(() => {
       emit(NOTE_OFF, {
         channel,
         value,
-      })
-    }, duration)
-  }
+      });
+    }, duration);
+  };
 
   return {
     emitNote,

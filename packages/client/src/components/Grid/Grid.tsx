@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components";
 import { useArrayOfSize } from "hooks/useArrayOfSize";
 import { GridCell } from "components/GridCell/GridCell";
 
@@ -6,7 +6,7 @@ interface GridProps {
   /** A set of GridItems to be overlaid upon the grid. */
   children: React.ReactNode;
   /** The number of cells within the grid. */
-  state?: 'error' | 'success'
+  state?: "error" | "success";
 }
 
 interface GridPropsWithSize extends GridProps {
@@ -36,17 +36,12 @@ export function Grid({
   y,
   state,
 }: GridPropsWithXY | GridPropsWithSize) {
-  const rows = useArrayOfSize(y || size || 1)
-  const columns = useArrayOfSize(x || size || 1)
+  const rows = useArrayOfSize(y || size || 1);
+  const columns = useArrayOfSize(x || size || 1);
   return (
     <Plane x={x || size || 1} y={y || size || 1} state={state}>
       {rows.map((y) =>
-        columns.map((x) => (
-          <GridCell
-            key={`${x}-${y}`}
-            coords={{x,y}}
-          />
-        ))
+        columns.map((x) => <GridCell key={`${x}-${y}`} coords={{ x, y }} />)
       )}
 
       {children}
@@ -55,14 +50,14 @@ export function Grid({
 }
 
 const Plane = styled.div<GridPropsWithXY>`
---gridXSize: ${props => props.x};
---gridYSize: ${props => props.y};
-position: relative;
-height: 100%;
-transition: background-color .2s ease;
-background: ${props => props.state === 'error' ? '#f80759' : '#333'};
-display: grid;
-grid-template-columns: repeat(var(--gridXSize), 1fr);
-grid-template-rows: repeat(var(--gridYSize), 1fr);
-border: 3px solid #777;
-`
+  --gridXSize: ${(props) => props.x};
+  --gridYSize: ${(props) => props.y};
+  position: relative;
+  height: 100%;
+  transition: background-color 0.2s ease;
+  background: ${(props) => (props.state === "error" ? "#f80759" : "#333")};
+  display: grid;
+  grid-template-columns: repeat(var(--gridXSize), 1fr);
+  grid-template-rows: repeat(var(--gridYSize), 1fr);
+  border: 3px solid #777;
+`;

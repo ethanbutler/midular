@@ -16,11 +16,11 @@ export function useTrigger(channel: TriggerChannel) {
   const on = React.useCallback(() => {
     const evt = new CustomEvent(`trigger_${channel}_on`);
     document.dispatchEvent(evt);
-  }, [channel])
+  }, [channel]);
   const off = React.useCallback(() => {
     const evt = new CustomEvent(`trigger_${channel}_off`);
     document.dispatchEvent(evt);
-  }, [channel])
+  }, [channel]);
   return {
     on,
     off,
@@ -39,19 +39,19 @@ interface UseSubscriptionTriggerConfig {
  **/
 export function useTriggerSubscription(
   channel: TriggerChannel,
-  { onTrigger = () => {} }: UseSubscriptionTriggerConfig = {},
+  { onTrigger = () => {} }: UseSubscriptionTriggerConfig = {}
 ) {
   const [isOn, setIsOn] = React.useState(false);
-  const cb = React.useRef(onTrigger)
+  const cb = React.useRef(onTrigger);
 
   React.useEffect(() => {
     const on = () => {
       setIsOn(true);
-      cb.current()
-    }
+      cb.current();
+    };
     const off = () => {
       setIsOn(false);
-    }
+    };
 
     document.addEventListener(`trigger_${channel}_on`, on);
     document.addEventListener(`trigger_${channel}_off`, off);
@@ -63,20 +63,19 @@ export function useTriggerSubscription(
   }, [channel]);
 
   React.useEffect(() => {
-    cb.current = onTrigger
-  }, [onTrigger])
+    cb.current = onTrigger;
+  }, [onTrigger]);
 
-  return isOn
+  return isOn;
 }
-
 
 /** Models a trigger that turns on and off based on a condition. */
 export function useOnOffTrigger(channel: TriggerChannel, isActive: boolean) {
   const { on, off } = useTrigger(channel);
   React.useEffect(() => {
-    const fn = isActive ? on : off
-    fn()
-  }, [isActive, on, off])
+    const fn = isActive ? on : off;
+    fn();
+  }, [isActive, on, off]);
 }
 
 /** Models a trigger that is activated by touch events. Returns callbacks to be added to an element. */

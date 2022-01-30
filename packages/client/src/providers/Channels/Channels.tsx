@@ -47,7 +47,7 @@ export function useChannelsProvider(length: number) {
 
   useGlobalKeypress(CHANNEL_KEY_MAP, "0", (k) => setActiveChannel(Number(k)));
 
-  const [firstChannel, ...rest] = channelsArray
+  const [firstChannel, ...rest] = channelsArray;
 
   return {
     activeChannel,

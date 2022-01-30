@@ -1,3 +1,3 @@
-import {ChannelBar} from './ChannelBar'
+import { ChannelBar } from "./ChannelBar";
 
-test.todo('ChannelBar')
+test.todo("ChannelBar");

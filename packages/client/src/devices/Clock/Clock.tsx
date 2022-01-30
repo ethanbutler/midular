@@ -20,9 +20,7 @@ const subdivisions = [2, 4, 8, 16, 32] as Subdivision[];
  * TODO: Add communication to subscribers when the clock is stopped.
  * TODO: Move clock events to worker threads via useClockTrigger.
  */
-export function Clock({
-  channel
-}: DeviceParameters) {
+export function Clock({ channel }: DeviceParameters) {
   const [longTouchRef, isLongPressed] = useLongTouch();
   const ref = React.useRef<HTMLButtonElement>(null);
   const [status, setStatus] = React.useState<ClockStatus>("stopped");
@@ -30,17 +28,17 @@ export function Clock({
   const [currentSubdivision, setSubdivision] = React.useState<Subdivision>(8);
   const interval = React.useRef<Interval>(null);
 
-  const {on, off} = useTrigger(channel)
+  const { on, off } = useTrigger(channel);
 
   React.useEffect(() => {
     if (status === "playing") {
       const tempo = (((bpm / MINUTE_IN_S) * 4) / currentSubdivision) * 1000;
       interval.current = setInterval(() => {
         ref.current!.style.background = "var(--gridItemColor)";
-        on()
+        on();
         setTimeout(() => {
           ref.current!.style.background = "";
-          off()
+          off();
         }, 100);
       }, tempo);
     } else {

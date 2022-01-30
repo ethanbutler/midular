@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 /**
  * Renders some editable text. This
@@ -9,19 +9,14 @@ import styled from "styled-components"
  * TODO: Support for alignment.
  */
 export function Label() {
-  return (
-    <LabelInput
-      defaultValue=""
-      placeholder="Text"
-    />
-  )
+  return <LabelInput defaultValue="" placeholder="Text" />;
 }
 
 const LabelInput = styled.input`
-display: block;
-background: none;
-border: none;
-width: 100%;
-color: white;
-text-align: center;
-`
+  display: block;
+  background: none;
+  border: none;
+  width: 100%;
+  color: white;
+  text-align: center;
+`;

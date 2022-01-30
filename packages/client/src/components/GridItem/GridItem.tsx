@@ -1,12 +1,12 @@
 import { useHover } from "hooks/useHover";
 import { useLongTouch } from "hooks/useLongTouch";
 import styled from "styled-components";
-import {rgba} from 'polished'
+import { rgba } from "polished";
 import { animated } from "react-spring";
 import { useChannelSubscription } from "providers/Channels/Channels";
 
 interface GridItemProps extends Dimensions {
-  color: string
+  color: string;
   channel: ChannelData["number"];
   onDelete(): void;
   onChannel?: (channel: ChannelData["number"]) => void;
@@ -35,7 +35,7 @@ export function GridItem({
   const [wrapperRef, isLongTouched] = useLongTouch();
   const [deletePlaceholderRef, isDeleteHovered] = useHover();
 
-  useChannelSubscription(onChannel, isLongTouched)
+  useChannelSubscription(onChannel, isLongTouched);
 
   let state: GridItemState = "inactive";
   if (isLongTouched) state = "active";
@@ -77,9 +77,9 @@ const GridItemPosition = styled.div<Dimensions & { state: GridItemState }>`
 
 // TODO: Fix z-index issue when item is active.
 const GridItemInner = styled.div<{ color: string }>`
-  --gridItemColor: ${props => props.color};
-  --gridItemMedAlpha: ${props => rgba(props.color, .5)};
-  --gridItemLowAlpha: ${props => rgba(props.color, .3)};
+  --gridItemColor: ${(props) => props.color};
+  --gridItemMedAlpha: ${(props) => rgba(props.color, 0.5)};
+  --gridItemLowAlpha: ${(props) => rgba(props.color, 0.3)};
   position: absolute;
   top: 0;
   left: 0;

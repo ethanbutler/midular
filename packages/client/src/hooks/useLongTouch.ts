@@ -20,8 +20,8 @@ export function useLongTouch(delay = 1000) {
   const [state, setState] = React.useState<LongTouchState>("inactive");
 
   React.useEffect(() => {
-    const prevTimeout = timeout.current
-    const el = ref.current
+    const prevTimeout = timeout.current;
+    const el = ref.current;
     const onStart = () => {
       timeout.current = setTimeout(() => setState("active"), delay);
     };

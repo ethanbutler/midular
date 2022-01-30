@@ -1,4 +1,4 @@
-type AnyFunction = (...args: any) => any
+type AnyFunction = (...args: any) => any;
 
 export const loggable =
   <T extends AnyFunction>(fn: T, symbol: string) =>
@@ -12,4 +12,4 @@ export const makeLoggable =
   (fn: T) =>
     loggable(fn, symbol);
 
-export const midiLoggable = makeLoggable('🎹')
+export const midiLoggable = makeLoggable("🎹");

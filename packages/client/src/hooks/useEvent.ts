@@ -1,7 +1,7 @@
 import { midiLoggable } from "helpers/logs";
 import { io } from "socket.io-client";
 
-const socket = io(':8000')
+const socket = io(":8000");
 
 /**
  * Provides a facade between Socket.io
@@ -10,9 +10,11 @@ const socket = io(':8000')
  * with GRPC.
  */
 export function useEvent() {
-  const emit = midiLoggable(<T>(msg: string, value: T) => socket.emit(msg, value))
+  const emit = midiLoggable(<T>(msg: string, value: T) =>
+    socket.emit(msg, value)
+  );
 
   return {
-    emit
-  }
+    emit,
+  };
 }
