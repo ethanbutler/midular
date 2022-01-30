@@ -49,6 +49,9 @@ export function useChannelsProvider(length: number) {
 
   const [firstChannel, ...rest] = channelsArray
 
+
+
+
   return {
     activeChannel,
     setActiveChannel,
