@@ -92,5 +92,5 @@ export function useChannelSubscription(
 
   React.useEffect(() => {
     if (cond) ref.current(ctx.activeChannel);
-  }, [ctx.activeChannel, cond]);
+  }, [ctx.activeChannel]);
 }

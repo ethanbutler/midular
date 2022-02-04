@@ -47,7 +47,6 @@ const Wrapper = styled.div<{ isHovered: boolean }>`
   display: flex;
   transition: height 0.2s ease;
   gap: 4px;
-
   height: ${(props) => (props.isHovered ? "60px" : "15px")};
   z-index: 1;
 `;

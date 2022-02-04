@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Clock } from "./Clock/Clock";
+import { Parent, Instance } from "./Parent/Parent";
 import { Label } from "./Label/Label";
 import { Note } from "./Note/Note";
 import { Sequencer } from "./Sequencer/Sequencer";
@@ -8,7 +9,9 @@ import { Trigger } from "./Trigger/Trigger";
 
 export const DEVICES_LIST = {
   Clock,
+  Instance,
   Note,
+  Parent,
   Label,
   Sequencer,
   Slider,
@@ -25,13 +28,13 @@ export const DEVICE_KEYCODES: Record<string, DeviceKey> = {
   N: "Note",
   S: "Sequencer",
   T: "Trigger",
+  X: 'Parent',
+  Z: 'Instance',
 
   // G: "Gate",
   // K: Knob
-  // A: Attenuator
   // Q: Quantizer
   // M: Memory tap
-  // P: Pitch wheel
   // R: Chord
   // X: "XYPad",
 };
@@ -42,6 +45,8 @@ export function Device({
   channel,
   w,
   h,
+  x,
+  y,
   uuid,
   triggerChannel,
 }: DeviceGridData & {
@@ -57,6 +62,7 @@ export function Device({
         orientation={orientation}
         uuid={uuid}
         triggerChannel={triggerChannel}
+        dimensions={{ x, y, w, h }}
       />
     </DeviceWrapper>
   );

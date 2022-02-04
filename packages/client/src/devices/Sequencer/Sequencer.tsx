@@ -7,8 +7,8 @@ import { useClockSubscription, useTriggerSubscription } from "hooks/useTrigger";
 import { SequencerStep } from "./SequencerStep";
 
 /** Encapsulates state for sequencers. */
-export function useSequencer(channel: ChannelData["number"]) {
-  const [beatCount] = React.useState(8);
+export function useSequencer(channel: ChannelData["number"], initialBeatCount = 8) {
+  const [beatCount] = React.useState(initialBeatCount);
   const [currentBeat, { increment, reset }] = useCount(beatCount);
   const beats = useArrayOfSize(beatCount);
 
@@ -40,14 +40,15 @@ export function useSequencer(channel: ChannelData["number"]) {
  * TODO: Support for connection to the global clock
  * TODO: Prevent long presses on children from triggering for the sequencer
  */
-export function Sequencer({ uuid, channel }: DeviceParameters) {
-  const { beatCount, beats, currentBeat } = useSequencer(channel);
+export function Sequencer({ uuid, channel, dimensions }: DeviceParameters) {
+  const { beatCount, beats, currentBeat } = useSequencer(channel, dimensions.w);
 
   return (
     <Wrapper beatCount={beatCount}>
       {beats.map((beat) => (
         <DevicesProvider key={beat}>
           <SequencerStep
+            dimensions={dimensions}
             uuid={`${uuid}_${beat}`}
             isActive={beat === currentBeat}
           />

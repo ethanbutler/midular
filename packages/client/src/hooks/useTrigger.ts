@@ -30,7 +30,7 @@ export function useTrigger(channel: TriggerChannel) {
 
 interface UseSubscriptionTriggerConfig {
   onTrigger?: () => void;
-  onStop?: () => void;
+  onOff?: () => void;
 }
 
 /**
@@ -41,18 +41,20 @@ interface UseSubscriptionTriggerConfig {
  **/
 export function useTriggerSubscription(
   channel: TriggerChannel,
-  { onTrigger = () => {}, onStop = () => {} }: UseSubscriptionTriggerConfig = {}
+  { onTrigger = () => {}, onOff = () => {} }: UseSubscriptionTriggerConfig = {}
 ) {
   const [isOn, setIsOn] = React.useState(false);
-  const cb = React.useRef(onTrigger);
+  const onCb = React.useRef(onTrigger);
+  const offCb = React.useRef(onOff);
 
   React.useEffect(() => {
     const on = () => {
       setIsOn(true);
-      cb.current();
+      onCb.current();
     };
     const off = () => {
       setIsOn(false);
+      offCb.current()
     };
 
     document.addEventListener(`trigger_${channel}_on`, on);
@@ -65,8 +67,12 @@ export function useTriggerSubscription(
   }, [channel]);
 
   React.useEffect(() => {
-    cb.current = onTrigger;
+    onCb.current = onTrigger;
   }, [onTrigger]);
+
+  React.useEffect(() => {
+    offCb.current = onOff;
+  }, [onOff]);
 
   return isOn;
 }

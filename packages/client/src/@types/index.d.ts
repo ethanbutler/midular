@@ -34,6 +34,7 @@ type DeviceParameters = WithUUID & {
   orientation: DeviceOrientation;
   /** A value that can be passed to override the channel for subscribed triggers. Does not affect output of device. */
   triggerChannel?: WithUUID["uuid"];
+  dimensions: Dimensions;
 };
 
 type TriggerChannel = ChannelData["number"] | WithUUID["uuid"];

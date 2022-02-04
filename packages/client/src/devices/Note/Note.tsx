@@ -32,7 +32,6 @@ export function useNoteInput(updateFromContext = false) {
 
   // FIXME: This ideally shouldn't be an effect.
   React.useEffect(() => {
-    console.log('🎵', lastNote)
     if(updateFromContext) handleChange(lastNote)
   // eslint-disable-next-line
   // updateFromContext is omitted to prevent the note updating upon initial long press.

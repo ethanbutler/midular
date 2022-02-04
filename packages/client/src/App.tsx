@@ -13,6 +13,7 @@ import { GridItem } from "components/GridItem/GridItem";
 import { TransitionInOutArray } from "components/TransitionInOut/TransitionInOut";
 import { ChannelBar } from "components/ChannelBar/ChannelBar";
 import { Device } from "devices";
+import { ParentInstanceProvider } from "devices/Parent/Parent";
 
 // TODO: Clean all of this up.
 
@@ -53,7 +54,6 @@ function DeviceGrid() {
     >
       <CellGrid />
 
-
       <CurrentDevice>{deviceType}</CurrentDevice>
     </CellSelectionProvider>
   );
@@ -65,12 +65,14 @@ function App() {
       <ChannelsProvider>
         <DevicesProvider>
           <KeySelection>
-            <AppLayout>
-              <ChannelBar />
-              <GridWrapper>
-                <DeviceGrid />
-              </GridWrapper>
-            </AppLayout>
+            <ParentInstanceProvider>
+              <AppLayout>
+                <ChannelBar />
+                <GridWrapper>
+                  <DeviceGrid />
+                </GridWrapper>
+              </AppLayout>
+            </ParentInstanceProvider>
           </KeySelection>
         </DevicesProvider>
       </ChannelsProvider>

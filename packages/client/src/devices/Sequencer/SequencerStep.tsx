@@ -9,6 +9,7 @@ import { useOnOffTrigger } from "hooks/useTrigger";
 
 interface SequencerStepProps extends WithUUID {
   isActive: boolean;
+  dimensions: Dimensions
 }
 
 /**
@@ -20,7 +21,7 @@ interface SequencerStepProps extends WithUUID {
  * TODO: Support for altering dimensions of subgrids
  * TODO: Limiting addition of devices to those that emit MIDI
  */
-export function SequencerStep({ isActive, uuid }: SequencerStepProps) {
+export function SequencerStep({ isActive, uuid, dimensions }: SequencerStepProps) {
   const theme = useTheme();
   const {
     addDevice,
@@ -39,7 +40,7 @@ export function SequencerStep({ isActive, uuid }: SequencerStepProps) {
         onRelease={addDevice}
         detectCollision={detectCollision}
       >
-        <Grid x={1} y={8}>
+        <Grid x={1} y={dimensions.h}>
           <TransitionInOutArray
             items={devicesArray}
             render={(item) => (

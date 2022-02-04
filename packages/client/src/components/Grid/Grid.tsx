@@ -59,5 +59,4 @@ const Plane = styled.div<GridPropsWithXY>`
   display: grid;
   grid-template-columns: repeat(var(--gridXSize), 1fr);
   grid-template-rows: repeat(var(--gridYSize), 1fr);
-  border: 3px solid #777;
 `;
